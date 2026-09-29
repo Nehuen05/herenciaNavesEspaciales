@@ -1,6 +1,6 @@
-class NaveDeCarga {
+class NaveDeCarga inherits Nave{
 
-	var velocidad = 0
+	var  property velocidad = 0
 	var property carga = 0
 
 	method sobrecargada() = carga > 100000
@@ -11,11 +11,12 @@ class NaveDeCarga {
 		carga = 0
 	}
 
+	
 }
 
-class NaveDePasajeros {
+class NaveDePasajeros inherits Nave{
 
-	var velocidad = 0
+	var property velocidad = 0
 	var property alarma = false
 	const cantidadDePasajeros = 0
 
@@ -31,7 +32,7 @@ class NaveDePasajeros {
 
 }
 
-class NaveDeCombate {
+class NaveDeCombate inherits Nave{
 	var property velocidad = 0
 	var property modo = reposo
 	const property mensajesEmitidos = []
@@ -70,3 +71,23 @@ object ataque {
 
 }
 
+class Nave {
+	var property velocidad = 0
+
+	method propulsate() {
+		velocidad = (velocidad + 20000).min(300000)
+	}
+
+}
+
+class NaveDeResiduos inherits NaveDeCarga {
+	var property estaSellada = false
+
+	method sellate() {
+	  estaSellada = true
+	}
+
+	override method recibirAmenaza() {
+		velocidad = 0
+	}
+}

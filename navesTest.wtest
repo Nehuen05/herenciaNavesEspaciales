@@ -5,6 +5,11 @@ describe "Nave de carga" {
 	const naveVacia = new NaveDeCarga()
 	const naveLlena = new NaveDeCarga(carga = 500000, velocidad = 290000)
 
+
+	test "propulsar" {
+		naveVacia.propulsate()
+		assert.equals(20000, naveVacia.velocidad())
+	}
 	test "sobrecargada" {
 		assert.that(naveLlena.sobrecargada())
 	}
@@ -54,6 +59,11 @@ describe "Nave de pasajeros" {
 		assert.that(naveSinPasajeros.alarma())
 	}
 
+	test "propulsar" {
+		naveSinPasajeros.propulsate()
+		assert.equals(300000, naveSinPasajeros.velocidad())
+	}
+
 }
 
 describe "Nave de combate" {
@@ -83,5 +93,14 @@ describe "Nave de combate" {
 		naveEnAtaque.recibirAmenaza()
 		assert.equals("Enemigo encontrado", naveEnAtaque.ultimoMensaje())
 	}
+}
+
+describe "nave de reiduos" {
+  test "residuos no expulsados al espacio" {
+	const naveLlena = new NaveDeResiduos(carga=5000, velocidad = 10000)
+	naveLlena.recibirAmenaza()
+	assert.equals(0, naveLlena.velocidad())
+	assert.equals(5000, naveLlena.carga())
+  }
 }
 
