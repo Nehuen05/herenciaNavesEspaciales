@@ -1,13 +1,12 @@
 class NaveDeCarga inherits Nave{
 
-	var  property velocidad = 0
 	var property carga = 0
 
 	method sobrecargada() = carga > 100000
 
 	method excedidaDeVelocidad() = velocidad > 100000
 
-	method recibirAmenaza() {
+	override method recibirAmenaza() {
 		carga = 0
 	}
 
@@ -16,7 +15,6 @@ class NaveDeCarga inherits Nave{
 
 class NaveDePasajeros inherits Nave{
 
-	var property velocidad = 0
 	var property alarma = false
 	const cantidadDePasajeros = 0
 
@@ -26,14 +24,13 @@ class NaveDePasajeros inherits Nave{
 
 	method estaEnPeligro() = velocidad > self.velocidadMaximaLegal() or alarma
 
-	method recibirAmenaza() {
+	override method recibirAmenaza() {
 		alarma = true
 	}
 
 }
 
 class NaveDeCombate inherits Nave{
-	var property velocidad = 0
 	var property modo = reposo
 	const property mensajesEmitidos = []
 
@@ -45,8 +42,14 @@ class NaveDeCombate inherits Nave{
 
 	method estaInvisible() = velocidad < 10000 and modo.invisible()
 
-	method recibirAmenaza() {
+	override method recibirAmenaza() {
 		modo.recibirAmenaza(self)
+	}
+
+	override method preparateParaViajar(){
+		super()
+		modo.prepararParaViajar(self)
+		
 	}
 
 }
@@ -59,6 +62,15 @@ object reposo {
 		nave.emitirMensaje("¡RETIRADA!")
 	}
 
+	method prepararParaViajar(nave) {
+		nave.emitirMensaje(self.mensajeParaViajar())
+		nave.modo(ataque)
+	}
+
+	method mensajeParaViajar() {
+	  return "saliendo en mision"
+	}
+
 }
 
 object ataque {
@@ -69,25 +81,53 @@ object ataque {
 		nave.emitirMensaje("Enemigo encontrado")
 	}
 
+	method mensajeParaViajar() {
+	  return "Volviendo a la base"
+	}
+
+	method prepararParaViajar(nave) {
+		nave.emitirMensaje(self.mensajeParaViajar())
+	}
+
 }
 
 class Nave {
 	var property velocidad = 0
 
 	method propulsate() {
-		velocidad = (velocidad + 20000).min(300000)
+		self.acelerar(20000)
 	}
+
+	method preparateParaViajar() {
+	  self.acelerar(15000)
+	}
+
+	method acelerar(aumento) {
+	  velocidad = (velocidad + aumento).min(300000)
+	}
+
+	method encontrarseConEnemigo() {
+	  self.propulsate()
+	  self.recibirAmenaza()
+	}
+
+	method recibirAmenaza() //abstracto
 
 }
 
 class NaveDeResiduos inherits NaveDeCarga {
-	var property estaSellada = false
+	var property sellada = false
 
 	method sellate() {
-	  estaSellada = true
+	  sellada = true
 	}
 
 	override method recibirAmenaza() {
 		velocidad = 0
+	}
+
+	override method preparateParaViajar() {
+		super()
+		self.sellate()
 	}
 }

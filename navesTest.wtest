@@ -64,6 +64,12 @@ describe "Nave de pasajeros" {
 		assert.equals(300000, naveSinPasajeros.velocidad())
 	}
 
+	test "encontrarse con el enemigo" {
+	  naveSinPasajeros.encontrarseConElEnemigo()
+	  assert.equals(20000, naveSinPasajeros.velocidad())
+	  assert.that(naveSinPasajeros.alarma())
+	}
+
 }
 
 describe "Nave de combate" {
@@ -93,6 +99,17 @@ describe "Nave de combate" {
 		naveEnAtaque.recibirAmenaza()
 		assert.equals("Enemigo encontrado", naveEnAtaque.ultimoMensaje())
 	}
+
+	test "preparate para viajar en modo ataque" {
+	  naveEnAtaque.preparateParaViajar()
+	  assert.equals("volviendo a la base", naveEnAtaque.ultimoMensaje())
+	  assert.equals(15000, naveEnAtaque.velocidad())
+	}
+
+	test "preparate para en viaje en modo repozo" {
+	  naveEnReposo.preparateParaViajar()
+	  assert.equals("volviendo a la base", naveEnAtaque.ultimoMensaje())
+	}
 }
 
 describe "nave de reiduos" {
@@ -101,6 +118,13 @@ describe "nave de reiduos" {
 	naveLlena.recibirAmenaza()
 	assert.equals(0, naveLlena.velocidad())
 	assert.equals(5000, naveLlena.carga())
+  }
+
+  test "residuos se preparan para viajar"{
+	const naveDeResiduos = new NaveDeResiduos(carga = 5000)
+	naveDeResiduos.preparateParaViajar()
+	assert.equals(0, naveDeResiduos.velocidad())
+	assert.that(naveDeResiduos.sellada())
   }
 }
 
